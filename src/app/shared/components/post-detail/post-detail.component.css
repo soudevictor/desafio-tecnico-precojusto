@@ -1,0 +1,14 @@
+/* NOTE: Estilos customizados para a página de detalhes */
+
+.post-detail {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.post-detail__article {
+  border-top: 4px solid #3b82f6;
+}
+
+.post-detail__back a:hover {
+  text-decoration: underline;
+}

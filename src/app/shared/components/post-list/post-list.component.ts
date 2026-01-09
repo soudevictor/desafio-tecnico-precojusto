@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
 
@@ -7,11 +8,10 @@ import { PostService } from '../../../core/services/post.service';
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css',
 })
-
 export class PostListComponent implements OnInit {
   // INFO: Signal armazena os posts igual ao useState do React
   // NOTE: posts é reativo, quando atualizado, o template renderiza automaticamente

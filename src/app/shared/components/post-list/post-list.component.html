@@ -26,6 +26,11 @@
             >
               Usuário
             </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+            >
+              Ações
+            </th>
           </tr>
         </thead>
         <tbody class="posts-table__body divide-y divide-gray-200">
@@ -44,11 +49,19 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
               {{ post.userId }}
             </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <a
+                [routerLink]="['/post', post.id]"
+                class="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+              >
+                Ver detalhes
+              </a>
+            </td>
           </tr>
           } @empty {
           <!-- INFO: @empty é executado quando a lista está vazia -->
           <tr>
-            <td colspan="4" class="px-6 py-8 text-center text-gray-500">Carregando posts...</td>
+            <td colspan="5" class="px-6 py-8 text-center text-gray-500">Carregando posts...</td>
           </tr>
           }
         </tbody>

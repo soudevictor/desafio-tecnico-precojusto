@@ -1,0 +1,13 @@
+/* NOTE: Estilos customizados para a lista de comentários */
+
+.comment-list {
+  width: 100%;
+}
+
+.comment-list__item {
+  border-left: 4px solid #3b82f6;
+}
+
+.comment-list__item:hover {
+  border-left-color: #2563eb;
+}
