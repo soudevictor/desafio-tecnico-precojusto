@@ -1,4 +1,4 @@
-// Interface Comment baseada na API do JSONPlaceholder
+// NOTE: Interface Comment baseada na API do JSONPlaceholder
 export interface Comment {
   postId: number;
   id: number;

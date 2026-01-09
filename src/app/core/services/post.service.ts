@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Post } from '../models/post.model';
 
-// Service para gerenciar posts da API JSONPlaceholder
+// NOTE: Service para gerenciar posts da API JSONPlaceholder
 
-// O HttpClient retorna Observables ao invés de Promises
+// INFO: O HttpClient retorna Observables ao invés de Promises
 @Injectable({
   providedIn: 'root',
 })
@@ -15,8 +15,8 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  // Busca todos os posts da API
-  // Retorna um Observable que pode ser subscribed no componente
+  // NOTE: Busca todos os posts da API
+  // INFO: Retorna um Observable que pode ser subscribed no componente
   getPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(this.apiUrl);
   }

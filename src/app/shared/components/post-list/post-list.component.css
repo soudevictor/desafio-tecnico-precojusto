@@ -1,0 +1,10 @@
+/* NOTE: Estilos adicionais personalizados se necessário */
+
+.posts-list {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.posts-table__row:last-child {
+  border-bottom: none;
+}
