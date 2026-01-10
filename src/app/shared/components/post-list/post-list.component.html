@@ -50,12 +50,28 @@
               {{ post.userId }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <a
-                [routerLink]="['/post', post.id]"
-                class="text-blue-600 hover:text-blue-800 font-medium hover:underline"
-              >
-                Ver detalhes
-              </a>
+              <div class="flex items-center gap-2">
+                <a
+                  [routerLink]="['/post', post.id]"
+                  class="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                >
+                  Ver detalhes
+                </a>
+                <button
+                  (click)="openDeleteModal(post.id)"
+                  class="text-red-600 hover:text-red-800 font-medium"
+                  title="Excluir post"
+                >
+                  🗑️
+                </button>
+                <button
+                  [routerLink]="['/post', post.id, 'edit']"
+                  class="text-green-600 hover:text-green-800 font-medium"
+                  title="Editar post"
+                >
+                  ✏️
+                </button>
+              </div>
             </td>
           </tr>
           } @empty {
@@ -68,4 +84,40 @@
       </table>
     </div>
   </section>
+
+  <!-- NOTE: Modal de confirmação de exclusão -->
+  @if (showDeleteModal()) {
+  <dialog open class="delete-modal fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      class="delete-modal__overlay fixed inset-0 bg-black bg-opacity-50"
+      (click)="closeDeleteModal()"
+    ></div>
+
+    <div
+      class="delete-modal__content bg-white rounded-lg shadow-xl p-6 relative z-10 max-w-md w-full mx-4"
+    >
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Confirmar Exclusão</h2>
+
+      <p class="text-gray-700 mb-6">
+        Tem certeza que deseja excluir o post #{{ postToDeleteId() }}? Esta ação não pode ser
+        desfeita.
+      </p>
+
+      <div class="delete-modal__actions flex gap-3 justify-end">
+        <button
+          (click)="closeDeleteModal()"
+          class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 font-medium transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="confirmDelete()"
+          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium transition-colors"
+        >
+          Excluir
+        </button>
+      </div>
+    </div>
+  </dialog>
+  }
 </div>

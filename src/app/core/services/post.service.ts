@@ -30,4 +30,14 @@ export class PostService {
   getCommentsByPostId(postId: number): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.apiUrl}/${postId}/comments`);
   }
+
+  // NOTE: Exclui um post pelo ID
+  deletePost(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // NOTE: Atualiza um post existente
+  updatePost(id: number, post: Post): Observable<Post> {
+    return this.http.put<Post>(`${this.apiUrl}/${id}`, post);
+  }
 }
