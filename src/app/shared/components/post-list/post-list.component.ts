@@ -16,6 +16,9 @@ export class PostListComponent implements OnInit {
   // INFO: Signal armazena os posts igual ao useState do React
   // NOTE: posts é reativo, quando atualizado, o template renderiza automaticamente
   posts = signal<Post[]>([]);
+  isLoading = signal(true);
+  errorMessage = signal<string | null>(null);
+
   showDeleteModal = signal(false);
   postToDeleteId = signal<number | null>(null);
 
@@ -24,13 +27,19 @@ export class PostListComponent implements OnInit {
 
   // INFO: ngOnInit é como o useEffect(() => {}, []) do React, executa uma vez quando o componente é montado
   ngOnInit(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
     // NOTE: Faz a requisição e atualiza o signal quando os dados chegarem
     this.postService.getPosts().subscribe({
       next: (data) => {
         this.posts.set(data); // NOTE: atualiza o signal igual ao setState do React
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Erro ao buscar posts:', err);
+        this.errorMessage.set('Erro ao carregar os posts. Por favor, tente novamente mais tarde.');
+        this.isLoading.set(false);
       },
     });
   }

@@ -1,59 +1,78 @@
-# DesafioTecnicoPrecojusto
+# Desafio Técnico - Preço Justo
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+## 👋 Sobre o Projeto
 
-## Development server
+Olá! Sou desenvolvedor júnior vindo do React e este é meu primeiro projeto em Angular. Criei uma aplicação para gerenciar posts usando a API do JSONPlaceholder, aplicando conceitos modernos do Angular 18+.
 
-To start a local development server, run:
+## 📦 Funcionalidades
 
-```bash
-ng serve
+- ✅ **Listagem de Posts** - Tabela com todos os posts da API
+- ✅ **Detalhes do Post** - Visualização completa com comentários
+- ✅ **Exclusão com Modal** - Confirmação antes de deletar
+- ✅ **UI Otimista** - Feedback visual instantâneo
+- ✅ **Loading State** - Spinner durante carregamento
+- ✅ **Tratamento de Erros** - Mensagens claras em caso de falha
+- ✅ **Navegação com Rotas** - Angular Router para SPA
+
+## 🛠️ Estrutura do Projeto
+
+```
+src/app/
+├── core/
+│   ├── models/          # Interfaces (Post, Comment)
+│   └── services/        # PostService (HttpClient)
+├── shared/
+│   └── components/      # Componentes reutilizáveis
+│       ├── post-list/
+│       ├── post-detail/
+│       └── comment-list/
+└── app.routes.ts        # Configuração de rotas
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🎯 Como Rodar
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Instalação
 
 ```bash
-ng generate component component-name
+# Clonar o repositório
+git clone [###]
+
+# Instalar dependências
+npm install
+
+# Rodar o projeto
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+O projeto estará disponível em `http://localhost:4200/`
 
-```bash
-ng generate --help
-```
+## 🧠 O que aprendi
 
-## Building
+- Como usar **Signals** no Angular (muito parecido com useState do React!)
+- Diferença entre **Observables** e **Promises**
+- Como funciona o **ActivatedRoute**
+- **@Input()** para passar props entre componentes (igual props no React)
+- Nova sintaxe **@for** e **@if** (substituem *ngFor e *ngIf)
+- Componentes **Standalone**
 
-To build the project run:
+## 📚 Tecnologias Utilizadas
 
-```bash
-ng build
-```
+- **Angular 18**
+- **TypeScript**
+- **Tailwind CSS** + BEM
+- **Signals**
+- **HttpClient**
+- **Angular Router**
+- **JSONPlaceholder API**
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🎨 Padrões de Código
 
-## Running unit tests
+- HTML Semântico
+- Nomenclatura BEM
+- Componentização clara e reutilizável
+- Comentários explicativos no código
+- Código organizado e limpo
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+---
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Desenvolvido por Devictor aprendendo Angular em 5 dias** 🚀

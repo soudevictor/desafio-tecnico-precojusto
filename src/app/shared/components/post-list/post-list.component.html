@@ -2,6 +2,22 @@
   <section class="posts-list__container max-w-7xl mx-auto p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Lista de Posts</h1>
 
+    @if (errorMessage()) {
+    <div
+      class="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6"
+      role="alert"
+    >
+      <strong class="font-bold">Erro!</strong>
+      <span class="block sm:inline"> {{ errorMessage() }}</span>
+    </div>
+    } @if (isLoading()) {
+    <div class="loading-state text-center py-12">
+      <div
+        class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+      ></div>
+      <p class="text-gray-600 mt-4 text-lg">Carregando posts...</p>
+    </div>
+    } @else {
     <div class="posts-table overflow-x-auto shadow-md rounded-lg">
       <table class="posts-table__content min-w-full bg-white">
         <thead class="posts-table__header bg-gray-100 border-b-2 border-gray-200">
@@ -83,6 +99,7 @@
         </tbody>
       </table>
     </div>
+    }
   </section>
 
   <!-- NOTE: Modal de confirmação de exclusão -->
