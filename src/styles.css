@@ -1,3 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* NOTE: Configuração global da aplicação */
+/* INFO: Semelhante a definir estilos no index.css do React */
+
+/* Corpo da aplicação com fundo cinza claro */
+body {
+  @apply bg-slate-100 antialiased;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Reset de links para remover sublinhado padrão */
+a {
+  @apply no-underline;
+}
+
+/* Transições suaves em elementos interativos */
+button,
+a,
+input,
+textarea,
+select {
+  @apply transition-all duration-200;
+}
