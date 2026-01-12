@@ -103,27 +103,17 @@ src/app/
 - **async pipe** substituído por Signals
 - Comentários com `// NOTE:` explicando o que o código faz
 - Comentários com `// INFO:` comparando com React (pra eu lembrar)
-- Nomes de variáveis em português
 
 ### 💡 Extensão Recomendada
 
 Para melhor visualização dos comentários no código, recomendo instalar a extensão **Better Comments** no VS Code:
 
-- **Link:** [Better Comments - VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)
+- **Link:** [Better Comments](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)
 
 Com ela, os comentários ficam coloridos:
 
 - `// NOTE:` → Destaque em azul (explicação do código)
 - `// INFO:` → Destaque em verde (comparação com React)
-
-## 🔧 Trade-offs
-
-| Decisão          | Prós                                         | Contras                                        |
-| ---------------- | -------------------------------------------- | ---------------------------------------------- |
-| Signals vs RxJS  | Mais simples, familiar pra quem vem do React | Menos maduro que RxJS                          |
-| Cache no Service | Simples de implementar                       | Não persiste entre sessões                     |
-| Visual de Feed   | UX moderna e familiar                        | Perdi a ordenação visual por colunas da tabela |
-| Font Awesome CDN | Rápido de implementar                        | Dependência externa                            |
 
 ## ✨ O que aprendi
 
