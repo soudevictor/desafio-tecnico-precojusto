@@ -18,29 +18,76 @@
       <p class="text-gray-600 mt-4 text-lg">Carregando posts...</p>
     </div>
     } @else {
+
+    <!-- NOTE: Controles de busca e itens por página -->
+    <div class="posts-controls flex flex-col sm:flex-row gap-4 mb-6">
+      <!-- INFO: Input de busca com ngModel (two-way binding igual ao controlled input do React) -->
+      <div class="posts-controls__search flex-1">
+        <input
+          type="text"
+          placeholder="Buscar por título ou conteúdo..."
+          [ngModel]="textoBusca()"
+          (ngModelChange)="onBusca($event)"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+
+      <!-- NOTE: Select pra escolher quantos itens por página -->
+      <div class="posts-controls__per-page flex items-center gap-2">
+        <label class="text-sm text-gray-600">Exibir:</label>
+        <select
+          [ngModel]="itensPorPagina()"
+          (ngModelChange)="onItensPorPaginaChange($event)"
+          class="border border-gray-300 rounded-lg px-3 py-2"
+        >
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+        <span class="text-sm text-gray-600">por página</span>
+      </div>
+    </div>
+
+    <!-- NOTE: Info de quantos resultados -->
+    <div class="text-sm text-gray-600 mb-4">
+      Mostrando {{ postsPaginados().length }} de {{ postsFiltrados().length }} posts @if
+      (textoBusca()) {
+      <span class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+        Busca: "{{ textoBusca() }}"
+        <button (click)="onBusca('')" class="ml-1 hover:text-blue-600">✕</button>
+      </span>
+      }
+    </div>
+
     <div class="posts-table overflow-x-auto shadow-md rounded-lg">
       <table class="posts-table__content min-w-full bg-white">
+        <!-- NOTE: Headers clicáveis pra ordenar -->
         <thead class="posts-table__header bg-gray-100 border-b-2 border-gray-200">
           <tr>
             <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+              (click)="onOrdenar('id')"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
             >
-              ID
+              ID {{ getIconeOrdenacao('id') }}
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+              (click)="onOrdenar('title')"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
             >
-              Título
+              Título {{ getIconeOrdenacao('title') }}
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+              (click)="onOrdenar('body')"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
             >
-              Conteúdo
+              Conteúdo {{ getIconeOrdenacao('body') }}
             </th>
             <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+              (click)="onOrdenar('userId')"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
             >
-              Usuário
+              Usuário {{ getIconeOrdenacao('userId') }}
             </th>
             <th
               class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
@@ -51,7 +98,8 @@
         </thead>
         <tbody class="posts-table__body divide-y divide-gray-200">
           <!-- INFO: @for é a nova sintaxe do Angular (igual ao .map() do React) -->
-          @for (post of posts(); track post.id) {
+          <!-- NOTE: Agora usa postsPaginados() que já está filtrado, ordenado e paginado -->
+          @for (post of postsPaginados(); track post.id) {
           <tr class="posts-table__row hover:bg-gray-50 transition-colors">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
               {{ post.id }}
@@ -59,7 +107,7 @@
             <td class="px-6 py-4 text-sm font-medium text-gray-900">
               {{ post.title }}
             </td>
-            <td class="px-6 py-4 text-sm text-gray-600">
+            <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
               {{ post.body }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -70,8 +118,9 @@
                 <a
                   [routerLink]="['/post', post.id]"
                   class="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                  title="Ver detalhes"
                 >
-                  Ver detalhes
+                  👁️
                 </a>
                 <button
                   (click)="openDeleteModal(post.id)"
@@ -80,26 +129,70 @@
                 >
                   🗑️
                 </button>
-                <button
-                  [routerLink]="['/post', post.id, 'edit']"
-                  class="text-green-600 hover:text-green-800 font-medium"
-                  title="Editar post"
-                >
-                  ✏️
-                </button>
               </div>
             </td>
           </tr>
           } @empty {
           <!-- INFO: @empty é executado quando a lista está vazia -->
           <tr>
-            <td colspan="5" class="px-6 py-8 text-center text-gray-500">Carregando posts...</td>
+            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+              @if (textoBusca()) { Nenhum post encontrado para "{{ textoBusca() }}". } @else {
+              Nenhum post disponível. }
+            </td>
           </tr>
           }
         </tbody>
       </table>
     </div>
-    }
+
+    <!-- NOTE: Paginação -->
+    @if (totalPaginas() > 1) {
+    <div class="posts-pagination flex items-center justify-between mt-6">
+      <div class="text-sm text-gray-600">Página {{ paginaAtual() }} de {{ totalPaginas() }}</div>
+
+      <div class="flex items-center gap-1">
+        <!-- NOTE: Botão anterior -->
+        <button
+          (click)="paginaAnterior()"
+          [disabled]="paginaAtual() === 1"
+          class="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium"
+          [class.opacity-50]="paginaAtual() === 1"
+          [class.cursor-not-allowed]="paginaAtual() === 1"
+        >
+          ← Anterior
+        </button>
+
+        <!-- NOTE: Números das páginas -->
+        @for (pagina of numerosPaginas(); track pagina) { @if (pagina === 1 || pagina ===
+        totalPaginas() || (pagina >= paginaAtual() - 2 && pagina <= paginaAtual() + 2)) {
+        <button
+          (click)="irParaPagina(pagina)"
+          class="px-3 py-2 rounded-lg text-sm font-medium"
+          [class.bg-blue-600]="pagina === paginaAtual()"
+          [class.text-white]="pagina === paginaAtual()"
+          [class.border]="pagina !== paginaAtual()"
+          [class.border-gray-300]="pagina !== paginaAtual()"
+          [class.hover:bg-gray-100]="pagina !== paginaAtual()"
+        >
+          {{ pagina }}
+        </button>
+        } @else if (pagina === paginaAtual() - 3 || pagina === paginaAtual() + 3) {
+        <span class="px-2 text-gray-400">...</span>
+        } }
+
+        <!-- NOTE: Botão próximo -->
+        <button
+          (click)="proximaPagina()"
+          [disabled]="paginaAtual() === totalPaginas()"
+          class="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium"
+          [class.opacity-50]="paginaAtual() === totalPaginas()"
+          [class.cursor-not-allowed]="paginaAtual() === totalPaginas()"
+        >
+          Próximo →
+        </button>
+      </div>
+    </div>
+    } }
   </section>
 
   <!-- NOTE: Modal de confirmação de exclusão -->
