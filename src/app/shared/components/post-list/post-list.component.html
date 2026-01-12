@@ -1,24 +1,6 @@
 <div class="posts-feed">
   <!-- NOTE: Container centralizado estilo feed de rede social -->
   <section class="posts-feed__container max-w-2xl mx-auto px-4 py-6">
-    <!-- NOTE: Card de criar novo post -->
-    <div class="post-create-card bg-white rounded-xl shadow-sm p-4 mb-6 border border-slate-200">
-      <a
-        routerLink="/post/novo"
-        class="flex items-center gap-3 text-slate-500 hover:text-blue-600 transition-all duration-200"
-        aria-label="Criar novo post"
-      >
-        <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
-          <i class="fa-solid fa-user text-slate-500"></i>
-        </div>
-        <div
-          class="flex-1 bg-slate-100 hover:bg-slate-200 rounded-full px-4 py-2.5 text-sm transition-all duration-200"
-        >
-          No que você está pensando?
-        </div>
-      </a>
-    </div>
-
     @if (errorMessage()) {
     <div
       class="error-message bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6"
@@ -30,14 +12,7 @@
       </div>
     </div>
     } @if (isLoading()) {
-    <div class="loading-state text-center py-12">
-      <div
-        class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-slate-200 border-t-blue-600"
-        role="status"
-        aria-label="Carregando posts"
-      ></div>
-      <p class="text-slate-500 mt-4">Carregando posts...</p>
-    </div>
+    <app-spinner mensagem="Carregando posts..." tamanho="lg" />
     } @else {
 
     <!-- NOTE: Controles de busca e filtros -->
@@ -302,4 +277,13 @@
     </div>
   </div>
   }
+
+  <!-- NOTE: Floating Action Button para criar novo post -->
+  <a
+    routerLink="/post/novo"
+    class="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg z-50 flex items-center justify-center hover:bg-blue-700 transition-colors"
+    aria-label="Criar novo post"
+  >
+    <i class="fa-solid fa-plus text-xl"></i>
+  </a>
 </div>

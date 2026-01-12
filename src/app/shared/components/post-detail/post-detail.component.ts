@@ -5,12 +5,13 @@ import { Comment } from '../../../core/models/comment.model';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 // Componente de detalhes de um post específico
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, CommentListComponent],
+  imports: [CommonModule, RouterLink, CommentListComponent, SpinnerComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css',
 })

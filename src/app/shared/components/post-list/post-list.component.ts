@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 // NOTE: Tipo pra saber qual coluna estou ordenando
 type ColunaOrdenacao = 'id' | 'title' | 'body' | 'userId';
@@ -13,7 +14,7 @@ type DirecaoOrdenacao = 'asc' | 'desc';
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, SpinnerComponent],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css',
 })

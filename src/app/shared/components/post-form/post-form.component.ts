@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 // NOTE: Componente que serve pra criar E editar posts
 // INFO: No React eu faria um componente só com lógica diferente baseada em props
 @Component({
   selector: 'app-post-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, SpinnerComponent],
   templateUrl: './post-form.component.html',
   styleUrl: './post-form.component.css',
 })

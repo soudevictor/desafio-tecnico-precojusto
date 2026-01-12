@@ -1,103 +1,133 @@
 <div class="comment-list">
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="text-2xl font-bold text-gray-800">Comentários ({{ comments.length }})</h2>
+  <!-- NOTE: Header da seção de comentários -->
+  <div class="flex items-center justify-between p-4 border-b border-slate-100">
+    <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+      <i class="fa-regular fa-comments text-blue-600"></i>
+      Comentários ({{ comments.length }})
+    </h2>
 
     <!-- NOTE: Botão pra mostrar/esconder formulário -->
     <button
       (click)="toggleFormulario()"
-      class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+      class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200"
+      [class]="
+        mostrarFormulario()
+          ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+          : 'bg-blue-600 text-white hover:bg-blue-700'
+      "
       aria-label="Adicionar novo comentário"
     >
-      {{ mostrarFormulario() ? '✕ Cancelar' : '+ Adicionar Comentário' }}
+      @if (mostrarFormulario()) {
+      <i class="fa-solid fa-xmark"></i>
+      <span>Cancelar</span>
+      } @else {
+      <i class="fa-solid fa-plus"></i>
+      <span class="hidden sm:inline">Comentar</span>
+      }
     </button>
   </div>
 
   <!-- NOTE: Formulário de novo comentário -->
   @if (mostrarFormulario()) {
-  <div class="comment-list__form bg-white p-4 rounded-lg shadow mb-6 border-l-4 border-green-500">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">Novo Comentário</h3>
-
-    <div class="space-y-4">
-      <div>
-        <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
-        <input
-          id="nome"
-          type="text"
-          [ngModel]="novoNome()"
-          (ngModelChange)="novoNome.set($event)"
-          placeholder="Seu nome..."
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-          aria-required="true"
-        />
+  <div class="comment-list__form p-4 bg-slate-50 border-b border-slate-100">
+    <div class="flex gap-3">
+      <!-- Avatar do usuário -->
+      <div class="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center flex-shrink-0">
+        <i class="fa-solid fa-user text-slate-500 text-xs"></i>
       </div>
 
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        <input
-          id="email"
-          type="email"
-          [ngModel]="novoEmail()"
-          (ngModelChange)="novoEmail.set($event)"
-          placeholder="seu@email.com"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-          aria-required="true"
-        />
-      </div>
-
-      <div>
-        <label for="corpo" class="block text-sm font-medium text-gray-700 mb-1">Comentário</label>
+      <!-- Formulário -->
+      <div class="flex-1 space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input
+            id="nome"
+            type="text"
+            [ngModel]="novoNome()"
+            (ngModelChange)="novoNome.set($event)"
+            placeholder="Seu nome"
+            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            aria-required="true"
+          />
+          <input
+            id="email"
+            type="email"
+            [ngModel]="novoEmail()"
+            (ngModelChange)="novoEmail.set($event)"
+            placeholder="seu@email.com"
+            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            aria-required="true"
+          />
+        </div>
         <textarea
           id="corpo"
           [ngModel]="novoCorpo()"
           (ngModelChange)="novoCorpo.set($event)"
           placeholder="Escreva seu comentário..."
-          rows="3"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
+          rows="2"
+          class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200"
           aria-required="true"
         ></textarea>
-      </div>
-
-      <div class="flex justify-end">
-        <button
-          (click)="adicionarComentario()"
-          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
-        >
-          Enviar Comentário
-        </button>
+        <div class="flex justify-end">
+          <button
+            (click)="adicionarComentario()"
+            class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all duration-200"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+            Publicar
+          </button>
+        </div>
       </div>
     </div>
   </div>
   }
 
-  <!-- NOTE: Lista de comentários -->
-  <ul class="comment-list__items space-y-4">
+  <!-- NOTE: Lista de comentários (estilo conversa) -->
+  <div class="comment-list__items bg-slate-50 p-4">
     @for (comment of comments; track comment.id) {
-    <li class="comment-list__item bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-      <div class="flex justify-between items-start">
-        <div class="comment-list__header mb-2 flex-1">
-          <h3 class="text-lg font-semibold text-gray-900">{{ comment.name }}</h3>
-          <p class="text-sm text-gray-500">{{ comment.email }}</p>
+    <div class="comment-list__item flex gap-3 mb-4 pl-2 last:mb-0">
+      <!-- Avatar -->
+      <div
+        class="w-8 h-8 rounded-full bg-slate-400 flex items-center justify-center flex-shrink-0 text-white text-xs font-semibold"
+      >
+        {{ comment.name.charAt(0).toUpperCase() }}
+      </div>
+
+      <!-- Balão de comentário -->
+      <div class="flex-1">
+        <div class="bg-white rounded-2xl rounded-tl-sm p-3 shadow-sm border border-slate-100">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h4 class="font-semibold text-slate-800 text-sm">{{ comment.name }}</h4>
+              <p class="text-xs text-slate-400">{{ comment.email }}</p>
+            </div>
+            <!-- Botão de excluir -->
+            <button
+              (click)="excluirComentario(comment.id)"
+              class="text-slate-400 hover:text-red-500 p-1 transition-all duration-200"
+              [attr.aria-label]="'Excluir comentário de ' + comment.name"
+              title="Excluir comentário"
+            >
+              <i class="fa-solid fa-trash text-xs"></i>
+            </button>
+          </div>
+          <p class="text-slate-600 text-sm mt-2 leading-relaxed">{{ comment.body }}</p>
         </div>
-
-        <!-- NOTE: Botão de excluir com aria-label pra acessibilidade -->
-        <button
-          (click)="excluirComentario(comment.id)"
-          class="text-red-500 hover:text-red-700 p-1 transition-colors"
-          [attr.aria-label]="'Excluir comentário de ' + comment.name"
-          title="Excluir comentário"
-        >
-          🗑️
-        </button>
+        <p class="text-xs text-slate-400 mt-1 ml-2">
+          <i class="fa-solid fa-clock mr-1"></i>
+          há {{ comment.id % 24 }} horas
+        </p>
       </div>
-
-      <div class="comment-list__body">
-        <p class="text-gray-700">{{ comment.body }}</p>
-      </div>
-    </li>
+    </div>
     } @empty {
-    <li class="text-gray-500 text-center py-8">
-      Nenhum comentário ainda. Seja o primeiro a comentar!
-    </li>
+    <div class="text-center py-8">
+      <div
+        class="w-12 h-12 mx-auto mb-3 rounded-full bg-slate-200 flex items-center justify-center"
+      >
+        <i class="fa-regular fa-comment-dots text-xl text-slate-400"></i>
+      </div>
+      <p class="text-slate-500 text-sm">Nenhum comentário ainda.</p>
+      <p class="text-slate-400 text-xs">Seja o primeiro a comentar!</p>
+    </div>
     }
-  </ul>
+  </div>
 </div>
