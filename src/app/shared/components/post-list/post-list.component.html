@@ -1,6 +1,17 @@
 <div class="posts-list">
   <section class="posts-list__container max-w-7xl mx-auto p-6">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Lista de Posts</h1>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Lista de Posts</h1>
+
+      <!-- NOTE: Botão pra criar novo post -->
+      <a
+        routerLink="/post/novo"
+        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+        aria-label="Criar novo post"
+      >
+        + Novo Post
+      </a>
+    </div>
 
     @if (errorMessage()) {
     <div
@@ -14,6 +25,8 @@
     <div class="loading-state text-center py-12">
       <div
         class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+        role="status"
+        aria-label="Carregando posts"
       ></div>
       <p class="text-gray-600 mt-4 text-lg">Carregando posts...</p>
     </div>
@@ -23,22 +36,27 @@
     <div class="posts-controls flex flex-col sm:flex-row gap-4 mb-6">
       <!-- INFO: Input de busca com ngModel (two-way binding igual ao controlled input do React) -->
       <div class="posts-controls__search flex-1">
+        <label for="busca-posts" class="sr-only">Buscar posts</label>
         <input
+          id="busca-posts"
           type="text"
           placeholder="Buscar por título ou conteúdo..."
           [ngModel]="textoBusca()"
           (ngModelChange)="onBusca($event)"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          aria-label="Campo de busca de posts"
         />
       </div>
 
       <!-- NOTE: Select pra escolher quantos itens por página -->
       <div class="posts-controls__per-page flex items-center gap-2">
-        <label class="text-sm text-gray-600">Exibir:</label>
+        <label for="itens-pagina" class="text-sm text-gray-600">Exibir:</label>
         <select
+          id="itens-pagina"
           [ngModel]="itensPorPagina()"
           (ngModelChange)="onItensPorPaginaChange($event)"
           class="border border-gray-300 rounded-lg px-3 py-2"
+          aria-label="Quantidade de itens por página"
         >
           <option [value]="5">5</option>
           <option [value]="10">10</option>
@@ -50,47 +68,86 @@
     </div>
 
     <!-- NOTE: Info de quantos resultados -->
-    <div class="text-sm text-gray-600 mb-4">
+    <div class="text-sm text-gray-600 mb-4" aria-live="polite">
       Mostrando {{ postsPaginados().length }} de {{ postsFiltrados().length }} posts @if
       (textoBusca()) {
       <span class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
         Busca: "{{ textoBusca() }}"
-        <button (click)="onBusca('')" class="ml-1 hover:text-blue-600">✕</button>
+        <button (click)="onBusca('')" class="ml-1 hover:text-blue-600" aria-label="Limpar busca">
+          ✕
+        </button>
       </span>
       }
     </div>
 
     <div class="posts-table overflow-x-auto shadow-md rounded-lg">
-      <table class="posts-table__content min-w-full bg-white">
+      <table
+        class="posts-table__content min-w-full bg-white"
+        role="grid"
+        aria-label="Tabela de posts"
+      >
         <!-- NOTE: Headers clicáveis pra ordenar -->
         <thead class="posts-table__header bg-gray-100 border-b-2 border-gray-200">
           <tr>
             <th
               (click)="onOrdenar('id')"
               class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
+              role="columnheader"
+              [attr.aria-sort]="
+                colunaOrdenacao() === 'id'
+                  ? direcaoOrdenacao() === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : 'none'
+              "
             >
               ID {{ getIconeOrdenacao('id') }}
             </th>
             <th
               (click)="onOrdenar('title')"
               class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
+              role="columnheader"
+              [attr.aria-sort]="
+                colunaOrdenacao() === 'title'
+                  ? direcaoOrdenacao() === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : 'none'
+              "
             >
               Título {{ getIconeOrdenacao('title') }}
             </th>
             <th
               (click)="onOrdenar('body')"
               class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
+              role="columnheader"
+              [attr.aria-sort]="
+                colunaOrdenacao() === 'body'
+                  ? direcaoOrdenacao() === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : 'none'
+              "
             >
               Conteúdo {{ getIconeOrdenacao('body') }}
             </th>
             <th
               (click)="onOrdenar('userId')"
               class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
+              role="columnheader"
+              [attr.aria-sort]="
+                colunaOrdenacao() === 'userId'
+                  ? direcaoOrdenacao() === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : 'none'
+              "
             >
               Usuário {{ getIconeOrdenacao('userId') }}
             </th>
             <th
               class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+              role="columnheader"
             >
               Ações
             </th>
@@ -118,13 +175,23 @@
                 <a
                   [routerLink]="['/post', post.id]"
                   class="text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                  [attr.aria-label]="'Ver detalhes do post ' + post.title"
                   title="Ver detalhes"
                 >
                   👁️
                 </a>
+                <a
+                  [routerLink]="['/post', post.id, 'edit']"
+                  class="text-yellow-600 hover:text-yellow-800 font-medium"
+                  [attr.aria-label]="'Editar post ' + post.title"
+                  title="Editar post"
+                >
+                  ✏️
+                </a>
                 <button
                   (click)="openDeleteModal(post.id)"
                   class="text-red-600 hover:text-red-800 font-medium"
+                  [attr.aria-label]="'Excluir post ' + post.title"
                   title="Excluir post"
                 >
                   🗑️

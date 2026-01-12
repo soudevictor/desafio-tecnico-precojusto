@@ -1,0 +1,90 @@
+<div class="post-form">
+  <div class="post-form__container max-w-2xl mx-auto p-6">
+    <!-- NOTE: Botão de voltar -->
+    <div class="post-form__back mb-6">
+      <a
+        routerLink="/"
+        class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
+        aria-label="Voltar para lista de posts"
+      >
+        ← Voltar para lista
+      </a>
+    </div>
+
+    <!-- NOTE: Título muda dependendo se é criação ou edição -->
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">
+      {{ isEdicao ? 'Editar Post' : 'Criar Novo Post' }}
+    </h1>
+
+    @if (errorMessage()) {
+    <div
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6"
+      role="alert"
+      aria-live="polite"
+    >
+      {{ errorMessage() }}
+    </div>
+    } @if (isLoading()) {
+    <div class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <p class="text-gray-600 mt-4">Carregando...</p>
+    </div>
+    } @else {
+    <!-- NOTE: Formulário usando ngModel (two-way binding) -->
+    <!-- INFO: É parecido com controlled inputs do React, mas mais simples -->
+    <form (ngSubmit)="salvar()" class="post-form__form bg-white rounded-lg shadow-lg p-8">
+      <!-- Campo Título -->
+      <div class="mb-6">
+        <label for="titulo" class="block text-sm font-medium text-gray-700 mb-2"> Título </label>
+        <input
+          id="titulo"
+          type="text"
+          [ngModel]="titulo()"
+          (ngModelChange)="titulo.set($event)"
+          name="titulo"
+          placeholder="Digite o título do post..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          required
+          aria-required="true"
+        />
+      </div>
+
+      <!-- Campo Corpo -->
+      <div class="mb-6">
+        <label for="corpo" class="block text-sm font-medium text-gray-700 mb-2"> Conteúdo </label>
+        <textarea
+          id="corpo"
+          [ngModel]="corpo()"
+          (ngModelChange)="corpo.set($event)"
+          name="corpo"
+          placeholder="Digite o conteúdo do post..."
+          rows="6"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+          required
+          aria-required="true"
+        ></textarea>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="flex gap-4 justify-end">
+        <button
+          type="button"
+          (click)="cancelar()"
+          class="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-medium transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          [disabled]="isSaving()"
+          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          @if (isSaving()) { Salvando... } @else {
+          {{ isEdicao ? 'Salvar Alterações' : 'Criar Post' }}
+          }
+        </button>
+      </div>
+    </form>
+    }
+  </div>
+</div>

@@ -51,4 +51,54 @@ export class PostDetailComponent implements OnInit {
       });
     }
   }
+
+  // NOTE: Handler quando um comentário é adicionado pelo CommentListComponent
+  // INFO: Como em React quando um componente filho emite um evento pro pai
+  onComentarioAdicionado(dadosComentario: Omit<Comment, 'id' | 'postId'>): void {
+    const postId = this.post()?.id;
+    if (!postId) return;
+
+    // NOTE: Monta o comentário completo adicionando o postId
+    const novoComentario: Omit<Comment, 'id'> = {
+      ...dadosComentario,
+      postId: postId,
+    };
+
+    // NOTE: Chama o service pra adicionar o comentário (postId, comment)
+    this.postService.addComment(postId, novoComentario).subscribe({
+      next: (comentarioCriado) => {
+        // NOTE: Atualiza a lista local adicionando o novo comentário
+        this.comments.update((lista) => [...lista, comentarioCriado]);
+      },
+      error: (err) => {
+        console.error('Erro ao adicionar comentário:', err);
+        alert('Erro ao adicionar comentário. Tente novamente.');
+      },
+    });
+  }
+
+  // NOTE: Handler quando um comentário é excluído pelo CommentListComponent
+  onComentarioExcluido(commentId: number): void {
+    const postId = this.post()?.id;
+    if (!postId) return;
+
+    // NOTE: Guarda lista anterior pra rollback em caso de erro
+    const listaAnterior = this.comments();
+
+    // NOTE: Atualização otimista - remove da UI antes da API responder
+    this.comments.update((lista) => lista.filter((c) => c.id !== commentId));
+
+    // NOTE: Chama o service pra excluir o comentário (postId, commentId)
+    this.postService.deleteComment(postId, commentId).subscribe({
+      next: () => {
+        console.log('Comentário excluído com sucesso');
+      },
+      error: (err) => {
+        console.error('Erro ao excluir comentário:', err);
+        // NOTE: Rollback em caso de erro
+        this.comments.set(listaAnterior);
+        alert('Erro ao excluir comentário. Tente novamente.');
+      },
+    });
+  }
 }

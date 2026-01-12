@@ -1,0 +1,11 @@
+/* NOTE: Estilos do formulário de post */
+
+.post-form {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.post-form__form input:focus,
+.post-form__form textarea:focus {
+  outline: none;
+}

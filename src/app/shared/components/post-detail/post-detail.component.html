@@ -1,12 +1,24 @@
 <div class="post-detail">
   <div class="post-detail__container max-w-4xl mx-auto p-6">
-    <div class="post-detail__back mb-6">
+    <div class="post-detail__back mb-6 flex justify-between items-center">
       <a
         routerLink="/"
         class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
+        aria-label="Voltar para lista de posts"
       >
         ← Voltar para lista
       </a>
+
+      <!-- NOTE: Botão de editar post -->
+      @if (post()) {
+      <a
+        [routerLink]="['/post', post()!.id, 'edit']"
+        class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-medium transition-colors"
+        aria-label="Editar este post"
+      >
+        ✏️ Editar Post
+      </a>
+      }
     </div>
 
     @if (isLoading()) {
@@ -35,7 +47,13 @@
 
     <section class="post-detail__comments bg-gray-50 rounded-lg p-6">
       <!-- INFO: CommentListComponent recebe os comentários via @Input, como props no React -->
-      <app-comment-list [comments]="comments()" />
+      <!-- NOTE: Agora também passa o postId e escuta os eventos de adicionar/excluir -->
+      <app-comment-list
+        [comments]="comments()"
+        [postId]="post()!.id"
+        (comentarioAdicionado)="onComentarioAdicionado($event)"
+        (comentarioExcluido)="onComentarioExcluido($event)"
+      />
     </section>
     } @else {
     <div class="text-center py-12">
