@@ -11,5 +11,5 @@ import { RouterModule } from '@angular/router';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('desafio-tecnico-precojusto');
+  protected readonly title = signal('Desafio Técnico - Preço Justo');
 }
