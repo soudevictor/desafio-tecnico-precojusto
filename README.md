@@ -14,7 +14,7 @@ Para rodar o projeto localmente:
 
 ```bash
 # Clonar o repositório
-git clone [URL_DO_REPOSITÓRIO]
+git clone https://github.com/soudevictor/desafio-tecnico-precojusto.git
 
 # Entrar na pasta
 cd desafio-tecnico-precojusto
