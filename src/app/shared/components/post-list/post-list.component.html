@@ -1,262 +1,262 @@
-<div class="posts-list">
-  <section class="posts-list__container max-w-7xl mx-auto p-6">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Lista de Posts</h1>
-
-      <!-- NOTE: Botão pra criar novo post -->
+<div class="posts-feed">
+  <!-- NOTE: Container centralizado estilo feed de rede social -->
+  <section class="posts-feed__container max-w-2xl mx-auto px-4 py-6">
+    <!-- NOTE: Card de criar novo post -->
+    <div class="post-create-card bg-white rounded-xl shadow-sm p-4 mb-6 border border-slate-200">
       <a
         routerLink="/post/novo"
-        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+        class="flex items-center gap-3 text-slate-500 hover:text-blue-600 transition-all duration-200"
         aria-label="Criar novo post"
       >
-        + Novo Post
+        <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
+          <i class="fa-solid fa-user text-slate-500"></i>
+        </div>
+        <div
+          class="flex-1 bg-slate-100 hover:bg-slate-200 rounded-full px-4 py-2.5 text-sm transition-all duration-200"
+        >
+          No que você está pensando?
+        </div>
       </a>
     </div>
 
     @if (errorMessage()) {
     <div
-      class="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6"
+      class="error-message bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6"
       role="alert"
     >
-      <strong class="font-bold">Erro!</strong>
-      <span class="block sm:inline"> {{ errorMessage() }}</span>
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ errorMessage() }}</span>
+      </div>
     </div>
     } @if (isLoading()) {
     <div class="loading-state text-center py-12">
       <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+        class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-slate-200 border-t-blue-600"
         role="status"
         aria-label="Carregando posts"
       ></div>
-      <p class="text-gray-600 mt-4 text-lg">Carregando posts...</p>
+      <p class="text-slate-500 mt-4">Carregando posts...</p>
     </div>
     } @else {
 
-    <!-- NOTE: Controles de busca e itens por página -->
-    <div class="posts-controls flex flex-col sm:flex-row gap-4 mb-6">
-      <!-- INFO: Input de busca com ngModel (two-way binding igual ao controlled input do React) -->
-      <div class="posts-controls__search flex-1">
-        <label for="busca-posts" class="sr-only">Buscar posts</label>
-        <input
-          id="busca-posts"
-          type="text"
-          placeholder="Buscar por título ou conteúdo..."
-          [ngModel]="textoBusca()"
-          (ngModelChange)="onBusca($event)"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          aria-label="Campo de busca de posts"
-        />
+    <!-- NOTE: Controles de busca e filtros -->
+    <div class="posts-controls bg-white rounded-xl shadow-sm p-4 mb-6 border border-slate-200">
+      <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Input de busca estilizado -->
+        <div class="flex-1 relative">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          ></i>
+          <input
+            id="busca-posts"
+            type="text"
+            placeholder="Buscar posts..."
+            [ngModel]="textoBusca()"
+            (ngModelChange)="onBusca($event)"
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-100 border-0 rounded-full focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
+            aria-label="Campo de busca de posts"
+          />
+        </div>
+
+        <!-- Select de ordenação -->
+        <div class="flex items-center gap-2">
+          <select
+            [ngModel]="itensPorPagina()"
+            (ngModelChange)="onItensPorPaginaChange($event)"
+            class="bg-slate-100 border-0 rounded-full px-4 py-2.5 text-sm text-slate-600 focus:ring-2 focus:ring-blue-500"
+            aria-label="Itens por página"
+          >
+            <option [value]="5">5 posts</option>
+            <option [value]="10">10 posts</option>
+            <option [value]="25">25 posts</option>
+          </select>
+        </div>
       </div>
 
-      <!-- NOTE: Select pra escolher quantos itens por página -->
-      <div class="posts-controls__per-page flex items-center gap-2">
-        <label for="itens-pagina" class="text-sm text-gray-600">Exibir:</label>
-        <select
-          id="itens-pagina"
-          [ngModel]="itensPorPagina()"
-          (ngModelChange)="onItensPorPaginaChange($event)"
-          class="border border-gray-300 rounded-lg px-3 py-2"
-          aria-label="Quantidade de itens por página"
+      <!-- Info de resultados -->
+      @if (textoBusca()) {
+      <div class="mt-3 flex items-center gap-2 text-sm text-slate-500">
+        <span>{{ postsFiltrados().length }} resultado(s) para</span>
+        <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium">
+          "{{ textoBusca() }}"
+        </span>
+        <button
+          (click)="onBusca('')"
+          class="text-slate-400 hover:text-red-500 transition-all duration-200"
+          aria-label="Limpar busca"
         >
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="25">25</option>
-          <option [value]="50">50</option>
-        </select>
-        <span class="text-sm text-gray-600">por página</span>
-      </div>
-    </div>
-
-    <!-- NOTE: Info de quantos resultados -->
-    <div class="text-sm text-gray-600 mb-4" aria-live="polite">
-      Mostrando {{ postsPaginados().length }} de {{ postsFiltrados().length }} posts @if
-      (textoBusca()) {
-      <span class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-        Busca: "{{ textoBusca() }}"
-        <button (click)="onBusca('')" class="ml-1 hover:text-blue-600" aria-label="Limpar busca">
-          ✕
+          <i class="fa-solid fa-xmark"></i>
         </button>
-      </span>
+      </div>
       }
     </div>
 
-    <div class="posts-table overflow-x-auto shadow-md rounded-lg">
-      <table
-        class="posts-table__content min-w-full bg-white"
-        role="grid"
-        aria-label="Tabela de posts"
+    <!-- NOTE: Feed de Posts (Cards) -->
+    <div class="posts-feed__list flex flex-col gap-4">
+      @for (post of postsPaginados(); track post.id) {
+      <!-- Card do Post estilo Facebook -->
+      <article
+        class="post-card bg-white rounded-xl shadow-sm hover:shadow-md border border-slate-200 transition-all duration-200"
       >
-        <!-- NOTE: Headers clicáveis pra ordenar -->
-        <thead class="posts-table__header bg-gray-100 border-b-2 border-gray-200">
-          <tr>
-            <th
-              (click)="onOrdenar('id')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
-              role="columnheader"
-              [attr.aria-sort]="
-                colunaOrdenacao() === 'id'
-                  ? direcaoOrdenacao() === 'asc'
-                    ? 'ascending'
-                    : 'descending'
-                  : 'none'
-              "
+        <!-- Header do Card: Avatar + Autor + Data -->
+        <div class="post-card__header flex items-center gap-3 p-4 border-b border-slate-100">
+          <div
+            class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold"
+          >
+            {{ post.userId }}
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-800 text-sm">Usuário {{ post.userId }}</h3>
+            <p class="text-xs text-slate-400">
+              <i class="fa-solid fa-clock mr-1"></i>
+              há {{ post.id }} horas
+            </p>
+          </div>
+          <!-- Menu de opções -->
+          <button
+            class="text-slate-400 hover:text-slate-600 p-2 hover:bg-slate-100 rounded-full transition-all duration-200"
+            [attr.aria-label]="'Opções do post ' + post.id"
+          >
+            <i class="fa-solid fa-ellipsis"></i>
+          </button>
+        </div>
+
+        <!-- Corpo do Card: Título + Conteúdo -->
+        <div class="post-card__body p-4">
+          <h2 class="font-bold text-slate-900 text-lg mb-2 leading-tight">
+            {{ post.title }}
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed line-clamp-3">
+            {{ post.body }}
+          </p>
+        </div>
+
+        <!-- Footer do Card: Ações -->
+        <div
+          class="post-card__footer flex items-center justify-between p-3 border-t border-slate-100 bg-slate-50/50 rounded-b-xl"
+        >
+          <!-- Botões de ação à esquerda -->
+          <div class="flex items-center gap-1">
+            <a
+              [routerLink]="['/post', post.id]"
+              class="flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-slate-200 rounded-lg text-sm font-medium transition-all duration-200"
+              [attr.aria-label]="'Ver comentários do post ' + post.title"
             >
-              ID {{ getIconeOrdenacao('id') }}
-            </th>
-            <th
-              (click)="onOrdenar('title')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
-              role="columnheader"
-              [attr.aria-sort]="
-                colunaOrdenacao() === 'title'
-                  ? direcaoOrdenacao() === 'asc'
-                    ? 'ascending'
-                    : 'descending'
-                  : 'none'
-              "
+              <i class="fa-regular fa-comment"></i>
+              <span class="hidden sm:inline">Comentários</span>
+            </a>
+          </div>
+
+          <!-- Botões de ação à direita -->
+          <div class="flex items-center gap-1">
+            <a
+              [routerLink]="['/post', post.id, 'edit']"
+              class="flex items-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg text-sm font-medium transition-all duration-200"
+              [attr.aria-label]="'Editar post ' + post.title"
             >
-              Título {{ getIconeOrdenacao('title') }}
-            </th>
-            <th
-              (click)="onOrdenar('body')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
-              role="columnheader"
-              [attr.aria-sort]="
-                colunaOrdenacao() === 'body'
-                  ? direcaoOrdenacao() === 'asc'
-                    ? 'ascending'
-                    : 'descending'
-                  : 'none'
-              "
+              <i class="fa-solid fa-pen"></i>
+              <span class="hidden sm:inline">Editar</span>
+            </a>
+            <button
+              (click)="openDeleteModal(post.id)"
+              class="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium transition-all duration-200"
+              [attr.aria-label]="'Excluir post ' + post.title"
             >
-              Conteúdo {{ getIconeOrdenacao('body') }}
-            </th>
-            <th
-              (click)="onOrdenar('userId')"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200"
-              role="columnheader"
-              [attr.aria-sort]="
-                colunaOrdenacao() === 'userId'
-                  ? direcaoOrdenacao() === 'asc'
-                    ? 'ascending'
-                    : 'descending'
-                  : 'none'
-              "
-            >
-              Usuário {{ getIconeOrdenacao('userId') }}
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
-              role="columnheader"
-            >
-              Ações
-            </th>
-          </tr>
-        </thead>
-        <tbody class="posts-table__body divide-y divide-gray-200">
-          <!-- INFO: @for é a nova sintaxe do Angular (igual ao .map() do React) -->
-          <!-- NOTE: Agora usa postsPaginados() que já está filtrado, ordenado e paginado -->
-          @for (post of postsPaginados(); track post.id) {
-          <tr class="posts-table__row hover:bg-gray-50 transition-colors">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ post.id }}
-            </td>
-            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-              {{ post.title }}
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-              {{ post.body }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-              {{ post.userId }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm">
-              <div class="flex items-center gap-2">
-                <a
-                  [routerLink]="['/post', post.id]"
-                  class="text-blue-600 hover:text-blue-800 font-medium hover:underline"
-                  [attr.aria-label]="'Ver detalhes do post ' + post.title"
-                  title="Ver detalhes"
-                >
-                  👁️
-                </a>
-                <a
-                  [routerLink]="['/post', post.id, 'edit']"
-                  class="text-yellow-600 hover:text-yellow-800 font-medium"
-                  [attr.aria-label]="'Editar post ' + post.title"
-                  title="Editar post"
-                >
-                  ✏️
-                </a>
-                <button
-                  (click)="openDeleteModal(post.id)"
-                  class="text-red-600 hover:text-red-800 font-medium"
-                  [attr.aria-label]="'Excluir post ' + post.title"
-                  title="Excluir post"
-                >
-                  🗑️
-                </button>
-              </div>
-            </td>
-          </tr>
-          } @empty {
-          <!-- INFO: @empty é executado quando a lista está vazia -->
-          <tr>
-            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-              @if (textoBusca()) { Nenhum post encontrado para "{{ textoBusca() }}". } @else {
-              Nenhum post disponível. }
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+              <i class="fa-solid fa-trash"></i>
+              <span class="hidden sm:inline">Excluir</span>
+            </button>
+          </div>
+        </div>
+      </article>
+      } @empty {
+      <!-- Estado vazio -->
+      <div
+        class="empty-state bg-white rounded-xl shadow-sm p-8 text-center border border-slate-200"
+      >
+        <div
+          class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center"
+        >
+          <i class="fa-solid fa-inbox text-2xl text-slate-400"></i>
+        </div>
+        @if (textoBusca()) {
+        <p class="text-slate-600">
+          Nenhum post encontrado para "<strong>{{ textoBusca() }}</strong
+          >"
+        </p>
+        <button (click)="onBusca('')" class="mt-3 text-blue-600 hover:underline text-sm">
+          Limpar busca
+        </button>
+        } @else {
+        <p class="text-slate-600">Nenhum post disponível.</p>
+        <a routerLink="/post/novo" class="mt-3 inline-block text-blue-600 hover:underline text-sm">
+          Criar primeiro post
+        </a>
+        }
+      </div>
+      }
     </div>
 
-    <!-- NOTE: Paginação -->
+    <!-- NOTE: Paginação estilizada -->
     @if (totalPaginas() > 1) {
-    <div class="posts-pagination flex items-center justify-between mt-6">
-      <div class="text-sm text-gray-600">Página {{ paginaAtual() }} de {{ totalPaginas() }}</div>
+    <div class="posts-pagination bg-white rounded-xl shadow-sm p-4 mt-6 border border-slate-200">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-sm text-slate-500">
+          Página <span class="font-semibold text-slate-700">{{ paginaAtual() }}</span> de
+          <span class="font-semibold text-slate-700">{{ totalPaginas() }}</span>
+        </p>
 
-      <div class="flex items-center gap-1">
-        <!-- NOTE: Botão anterior -->
-        <button
-          (click)="paginaAnterior()"
-          [disabled]="paginaAtual() === 1"
-          class="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium"
-          [class.opacity-50]="paginaAtual() === 1"
-          [class.cursor-not-allowed]="paginaAtual() === 1"
-        >
-          ← Anterior
-        </button>
+        <div class="flex items-center gap-1">
+          <!-- Botão anterior -->
+          <button
+            (click)="paginaAnterior()"
+            [disabled]="paginaAtual() === 1"
+            class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+            [class]="
+              paginaAtual() === 1
+                ? 'text-slate-300 cursor-not-allowed'
+                : 'text-slate-600 hover:bg-slate-100'
+            "
+          >
+            <i class="fa-solid fa-chevron-left text-xs"></i>
+            <span class="hidden sm:inline">Anterior</span>
+          </button>
 
-        <!-- NOTE: Números das páginas -->
-        @for (pagina of numerosPaginas(); track pagina) { @if (pagina === 1 || pagina ===
-        totalPaginas() || (pagina >= paginaAtual() - 2 && pagina <= paginaAtual() + 2)) {
-        <button
-          (click)="irParaPagina(pagina)"
-          class="px-3 py-2 rounded-lg text-sm font-medium"
-          [class.bg-blue-600]="pagina === paginaAtual()"
-          [class.text-white]="pagina === paginaAtual()"
-          [class.border]="pagina !== paginaAtual()"
-          [class.border-gray-300]="pagina !== paginaAtual()"
-          [class.hover:bg-gray-100]="pagina !== paginaAtual()"
-        >
-          {{ pagina }}
-        </button>
-        } @else if (pagina === paginaAtual() - 3 || pagina === paginaAtual() + 3) {
-        <span class="px-2 text-gray-400">...</span>
-        } }
+          <!-- Números das páginas -->
+          <div class="flex items-center gap-1">
+            @for (pagina of numerosPaginas(); track pagina) { @if (pagina === 1 || pagina ===
+            totalPaginas() || (pagina >= paginaAtual() - 1 && pagina <= paginaAtual() + 1)) {
+            <button
+              (click)="irParaPagina(pagina)"
+              class="w-9 h-9 rounded-lg text-sm font-medium transition-all duration-200"
+              [class]="
+                pagina === paginaAtual()
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-600 hover:bg-slate-100'
+              "
+            >
+              {{ pagina }}
+            </button>
+            } @else if (pagina === paginaAtual() - 2 || pagina === paginaAtual() + 2) {
+            <span class="w-9 h-9 flex items-center justify-center text-slate-400">...</span>
+            } }
+          </div>
 
-        <!-- NOTE: Botão próximo -->
-        <button
-          (click)="proximaPagina()"
-          [disabled]="paginaAtual() === totalPaginas()"
-          class="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium"
-          [class.opacity-50]="paginaAtual() === totalPaginas()"
-          [class.cursor-not-allowed]="paginaAtual() === totalPaginas()"
-        >
-          Próximo →
-        </button>
+          <!-- Botão próximo -->
+          <button
+            (click)="proximaPagina()"
+            [disabled]="paginaAtual() === totalPaginas()"
+            class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+            [class]="
+              paginaAtual() === totalPaginas()
+                ? 'text-slate-300 cursor-not-allowed'
+                : 'text-slate-600 hover:bg-slate-100'
+            "
+          >
+            <span class="hidden sm:inline">Próximo</span>
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+          </button>
+        </div>
       </div>
     </div>
     } }
@@ -264,37 +264,42 @@
 
   <!-- NOTE: Modal de confirmação de exclusão -->
   @if (showDeleteModal()) {
-  <dialog open class="delete-modal fixed inset-0 z-50 flex items-center justify-center">
-    <div
-      class="delete-modal__overlay fixed inset-0 bg-black bg-opacity-50"
-      (click)="closeDeleteModal()"
-    ></div>
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Overlay -->
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="closeDeleteModal()"></div>
 
+    <!-- Modal Content -->
     <div
-      class="delete-modal__content bg-white rounded-lg shadow-xl p-6 relative z-10 max-w-md w-full mx-4"
+      class="relative bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full animate-in zoom-in-95 duration-200"
     >
-      <h2 class="text-xl font-bold text-gray-900 mb-4">Confirmar Exclusão</h2>
+      <!-- Ícone -->
+      <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+        <i class="fa-solid fa-trash text-red-600 text-xl"></i>
+      </div>
 
-      <p class="text-gray-700 mb-6">
+      <h2 class="text-xl font-bold text-slate-900 text-center mb-2">Excluir post?</h2>
+
+      <p class="text-slate-500 text-center text-sm mb-6">
         Tem certeza que deseja excluir o post #{{ postToDeleteId() }}? Esta ação não pode ser
         desfeita.
       </p>
 
-      <div class="delete-modal__actions flex gap-3 justify-end">
+      <div class="flex gap-3">
         <button
           (click)="closeDeleteModal()"
-          class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 font-medium transition-colors"
+          class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 font-medium transition-all duration-200"
         >
           Cancelar
         </button>
         <button
           (click)="confirmDelete()"
-          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium transition-colors"
+          class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium transition-all duration-200"
         >
+          <i class="fa-solid fa-trash mr-2"></i>
           Excluir
         </button>
       </div>
     </div>
-  </dialog>
+  </div>
   }
 </div>
